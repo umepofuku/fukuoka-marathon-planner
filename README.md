@@ -5,7 +5,7 @@ Enter your planned pace for each section and see when you will reach each checkp
 
 🇯🇵 日本語の説明は[下](#日本語)にあります。
 
-**Live site:** `https://yumiefj.github.io/fukuoka-marathon-planner/` (Japanese) · `https://yumiefj.github.io/fukuoka-marathon-planner/en.html` (English)
+**Live site:** `https://umepofuku.github.io/fukuoka-marathon-planner/` (Japanese) · `https://umepofuku.github.io/fukuoka-marathon-planner/en.html` (English)
 
 ## Features
 
