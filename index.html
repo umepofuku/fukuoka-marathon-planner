@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>福岡マラソン2026 関門ペースプランナー</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#666;--line:#ddd;--card:#f5f6f8;--ok:#1b7f3b;--warn:#b26a00;--ng:#c62828;--okb:#e6f4ea;--warnb:#fff3e0;--ngb:#fdecea;--acc:#0b5fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--fg:#eee;--mut:#aaa;--line:#333;--card:#1e1f22;--ok:#6fd58a;--warn:#ffb74d;--ng:#ff8a80;--okb:#12301b;--warnb:#33260d;--ngb:#3a1614;--acc:#7aa7ff}}
+:root[data-theme="dark"]{--bg:#121212;--fg:#eee;--mut:#aaa;--line:#333;--card:#1e1f22;--ok:#6fd58a;--warn:#ffb74d;--ng:#ff8a80;--okb:#12301b;--warnb:#33260d;--ngb:#3a1614;--acc:#7aa7ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.5;padding:12px}
+main{max-width:520px;margin:0 auto}
+h1{font-size:18px;margin:4px 0 2px}
+.sub{color:var(--mut);font-size:12px;margin-bottom:10px}
+.card{background:var(--card);border-radius:12px;padding:12px;margin-bottom:10px}
+label{font-size:13px;color:var(--mut);display:block;margin-bottom:4px}
+.row{display:flex;gap:8px;align-items:center}
+input[type=range]{width:100%}
+select{font-size:15px;padding:3px 2px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+button{font-family:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips button,.dn,.bb{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:16px;padding:4px 10px;font-size:13px}
+.chips button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.dn{border-radius:8px;padding:3px 8px;font-size:14px}
+.ctl{margin-top:4px;display:flex;gap:6px;align-items:center}
+.sum{font-size:14px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;color:var(--mut);font-weight:600;text-align:right;padding:4px 4px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 4px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+td small{display:block;color:var(--mut);font-size:11px}
+.ok td.m{color:var(--ok);background:var(--okb)}.warn td.m{color:var(--warn);background:var(--warnb)}.ng td.m{color:var(--ng);background:var(--ngb)}
+td.m{font-weight:700}
+.note{font-size:11px;color:var(--mut);margin-top:8px}
+.pbtn{width:100%;padding:10px;border:0;border-radius:10px;background:var(--acc);color:#fff;font-size:15px}
+.lang{font-size:13px;text-align:right}.lang a{color:var(--acc)}
+@media print{body{padding:0;background:#fff;color:#000}.noprint{display:none}.card{background:#fff;border:1px solid #999}:root{--okb:#fff;--warnb:#fff;--ngb:#fff;--ok:#000;--warn:#000;--ng:#000;--mut:#333}td,th{border-color:#999}select{appearance:none;-webkit-appearance:none;border:0;background:#fff;color:#000;font-weight:700;padding:0}}
+</style>
+</head>
+<body>
+<main>
+<div class="lang noprint"><a href="en.html" lang="en" hreflang="en">English</a></div>
+<h1>福岡マラソン2026 関門ペースプランナー</h1>
+<div class="sub">2026/11/8 号砲 8:20 ・ 制限時間7時間（15:20）</div>
+
+<div class="card noprint">
+<label for="loss">号砲からスタートラインまでのロス: <b id="lv">5</b>分</label>
+<input id="loss" type="range" min="0" max="25" step="1" value="5">
+<div class="chips" id="chips"></div>
+<div class="note">ブロック別のロスは公式発表がないため目安です。前年のご自身の記録（グロス−ネット）があればそれに合わせてください。</div>
+</div>
+
+<div class="card noprint">
+<label for="bulk">全区間を同じペースにそろえる（1kmあたり）</label>
+<div class="row"><select id="bulk"></select><button type="button" class="bb" id="bb">全区間に反映</button></div>
+</div>
+
+<div class="card"><div class="sum" id="sum"></div></div>
+
+<div class="card">
+<table>
+<thead><tr><th>関門／区間ペース(1km)</th><th>通過予定</th><th>閉鎖</th><th>余裕</th></tr></thead>
+<tbody id="tb"></tbody>
+</table>
+<div class="note">各関門に向かう区間のペースを入力します。↓＝この区間以降すべて同じペースにする。通過予定は秒を切り上げて分単位で表示（安全側）。閉鎖時刻は号砲基準（公式）。余裕10分未満は黄、5分未満は赤。</div>
+</div>
+
+<button class="pbtn noprint" onclick="window.print()">印刷 / PDF保存</button>
+<div class="note">関門データ出典: 福岡マラソン公式サイト（大会要項）。直前の変更は公式で確認してください。</div>
+</main>
+<script>
+var START=30000,L={"u": "分", "a": "予想ゴールタイム ", "b": "（平均 ", "c": "）→ ゴール予定 ", "d": "スタートロス ", "e": "分 ／ 最も厳しい関門: ", "f": "（余裕 ", "g": "分）", "pl": "区間ペース（1kmあたり）", "dn": "この区間以降すべて同じペースにする", "dl": "以降同じ"};
+var G=[["百道中央公園", 5.3, "9:25"], ["小戸西交差点手前", 9.9, "10:09"], ["今宿駅前交差点先", 14.3, "10:52"], ["九州大学伊都キャンパス", 19.8, "11:44"], ["今津運動公園", 25.0, "12:33"], ["北崎小学校", 29.8, "13:20"], ["昭和バス西浦待機所", 32.9, "13:50"], ["伊牟田交差点手前", 36.9, "14:28"], ["吉田三叉路手前", 40.1, "14:59"], ["フィニッシュ", 42.195, "15:20"]];
+var $=function(i){return document.getElementById(i)};
+function sec(s){var p=s.split(":");return +p[0]*3600+ +p[1]*60}
+function hms(s){s=Math.round(Math.round(s*1000)/1000);var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h+":"+(m<10?"0":"")+m+":"+(x<10?"0":"")+x}
+function hm(s){var t=Math.ceil(s/60-1e-9),h=Math.floor(t/60),m=t%60;return h+":"+(m<10?"0":"")+m}
+function pf(p){var m=Math.floor(p/60),s=p%60;return m+":"+(s<10?"0":"")+s}
+function pace(t){var p=t/42.195,m=Math.floor(p/60),s=Math.round(p%60);if(s==60){m++;s=0}return m+"'"+(s<10?"0":"")+s+"\"/km"}
+var K="fm26p",P=[],tr=[];
+G.forEach(function(){P.push(420)});
+function save(){try{localStorage.setItem(K,JSON.stringify({p:P,l:$("loss").value}))}catch(e){}}
+function load(){try{var d=JSON.parse(localStorage.getItem(K)||"null");if(d&&d.p&&d.p.length==G.length){P=d.p.map(function(x){x=+x;return x>=180&&x<=720&&x%5==0?x:420});var l=+d.l;if(l>=0&&l<=25)$("loss").value=l}}catch(e){}}
+function opts(sel){for(var v=180;v<=720;v+=5){var o=document.createElement("option");o.value=v;o.textContent=pf(v);sel.appendChild(o)}}
+G.forEach(function(g,i){
+ var r=document.createElement("tr");
+ r.innerHTML='<td>'+g[0]+'<small>'+(g[1]==42.195?"42.195":g[1].toFixed(1))+'km</small><div class="ctl"><select></select><button type="button" class="dn noprint">\u2193 '+L.dl+'</button></div></td><td></td><td>'+g[2]+'</td><td class="m"></td>';
+ var s=r.querySelector("select");opts(s);s.setAttribute("aria-label",g[0]+" "+L.pl);var db=r.querySelector(".dn");db.setAttribute("aria-label",L.dn);db.title=L.dn;
+ s.onchange=function(){P[i]=+s.value;update()};
+ r.querySelector(".dn").onclick=function(){for(var j=i;j<G.length;j++)P[j]=P[i];update()};
+ $("tb").appendChild(r);tr.push(r)});
+opts($("bulk"));$("bulk").value=420;
+$("bb").onclick=function(){for(var j=0;j<G.length;j++)P[j]=+$("bulk").value;update()};
+function update(){
+ var loss=+$("loss").value;
+ $("lv").textContent=loss;
+ [].forEach.call($("chips").children,function(b){b.className=(+b.dataset.v==loss)?"on":""});
+ var t=START+loss*60,prev=0,net=0,minM=1e9,minN="";
+ G.forEach(function(g,i){
+  var seg=(g[1]-prev)*P[i];prev=g[1];net+=seg;t+=seg;
+  var pm=Math.ceil(t/60-1e-9),mg=sec(g[2])/60-pm,r=tr[i];
+  if(mg<minM){minM=mg;minN=g[0]}
+  r.className=mg<5?"ng":mg<10?"warn":"ok";
+  r.querySelector("select").value=P[i];
+  r.children[1].textContent=hm(t);
+  r.children[3].textContent=(mg<0?"-":"+")+Math.abs(mg)+L.u;
+ });
+ $("sum").innerHTML=L.a+hms(net)+L.b+pace(net)+L.c+hm(t)+"<br>"+L.d+loss+L.e+minN+L.f+(minM<0?"-":"")+Math.abs(minM)+L.g;
+ save();
+}
+[0,3,6,10,15,20].forEach(function(v){var b=document.createElement("button");b.textContent=v+L.u;b.dataset.v=v;b.onclick=function(){$("loss").value=v;update()};$("chips").appendChild(b)});
+$("loss").addEventListener("input",update);
+load();update();
+</script>
+</body>
+</html>
